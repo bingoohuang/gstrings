@@ -29,6 +29,7 @@ var (
 	max    = flag.Int("max", 256, "maximum length of UTF-8 strings printed, in runes")
 	ascii  = flag.Bool("ascii", false, "restrict strings to ASCII")
 	search = flag.String("search", "", "search ASCII string")
+	n      = flag.Int("n", 1, "search at most n places")
 	offset = flag.Bool("offset", true, "show file name and offset of start of each string")
 )
 
@@ -70,14 +71,23 @@ func do(name string, file *os.File) {
 	in := bufio.NewReader(file)
 	str := make([]rune, 0, *max)
 	filePos := int64(0)
+	searchTimes := 0
 	print := func() {
 		if len(str) >= *min {
 			s := string(str)
 			if *search == "" || strings.Contains(s, *search) {
+				if searchTimes > 0 || *search != "" && strings.Contains(s, *search) {
+					searchTimes++
+				}
+
 				if *offset {
 					fmt.Printf("%s:#%d:\t%s\n", name, filePos-int64(len(s)), s)
 				} else {
 					fmt.Println(s)
+				}
+
+				if *n > 0 && searchTimes >= *n {
+					os.Exit(0)
 				}
 			}
 		}
