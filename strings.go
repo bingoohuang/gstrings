@@ -52,27 +52,35 @@ func main() {
 	}
 
 	if flag.NArg() == 0 {
-		do("<stdin>", os.Stdin)
-	} else {
-		for _, arg := range flag.Args() {
-			fd, err := os.Open(arg)
-			if err != nil {
-				log.Print(err)
-				continue
-			}
-			do(arg, fd)
-			stdout.Flush()
-			fd.Close()
-		}
+		do(os.Stdin)
+		return
+	}
+
+	for _, arg := range flag.Args() {
+		dealFile(arg)
 	}
 }
 
-func do(name string, file *os.File) {
-	in := bufio.NewReader(file)
+func dealFile(file string) {
+	fd, err := os.Open(file)
+	if err != nil {
+		log.Print(err)
+		return
+	}
+
+	defer func() {
+		fd.Close()
+		stdout.Flush()
+	}()
+
+	do(fd)
+}
+
+func do(file *os.File) {
 	str := make([]rune, 0, *max)
-	filePos := int64(0)
+	pos := int64(0)
 	searchTimes := 0
-	print := func() {
+	printer := func() {
 		if len(str) >= *min {
 			s := string(str)
 			if *search == "" || strings.Contains(s, *search) {
@@ -81,7 +89,7 @@ func do(name string, file *os.File) {
 				}
 
 				if *offset {
-					fmt.Printf("%s:#%d:\t%s\n", name, filePos-int64(len(s)), s)
+					fmt.Printf("%s:#%d:\t%s\n", file.Name(), pos-int64(len(s)), s)
 				} else {
 					fmt.Println(s)
 				}
@@ -93,14 +101,14 @@ func do(name string, file *os.File) {
 		}
 		str = str[:0]
 	}
-	for {
-		var (
-			r   rune
-			wid int
-			err error
-		)
+
+	for in := bufio.NewReader(file); ; {
+		var r rune
+		var wid int
+		var err error
+
 		// One string per loop.
-		for ; ; filePos += int64(wid) {
+		for ; ; pos += int64(wid) {
 			if r, wid, err = in.ReadRune(); err != nil {
 				if err != io.EOF {
 					log.Print(err)
@@ -108,14 +116,14 @@ func do(name string, file *os.File) {
 				return
 			}
 			if !strconv.IsPrint(r) || *ascii && r >= 0xFF {
-				print()
+				printer()
 				continue
 			}
 			// It's printable. Keep it.
-			if len(str) >= *max {
-				print()
-			}
 			str = append(str, r)
+			if len(str) >= cap(str) {
+				printer()
+			}
 		}
 	}
 }
