@@ -29,7 +29,7 @@ var (
 	max    = flag.Int("max", 256, "maximum length of UTF-8 strings printed, in runes")
 	ascii  = flag.Bool("ascii", false, "restrict strings to ASCII")
 	search = flag.String("search", "", "search ASCII string")
-	n      = flag.Int("n", 1, "search at most n places")
+	n      = flag.Int("n", 0, "print at most n places")
 	offset = flag.Bool("offset", true, "show file name and offset of start of each string")
 )
 
@@ -79,22 +79,19 @@ func dealFile(file string) {
 func do(file *os.File) {
 	str := make([]rune, 0, *max)
 	pos := int64(0)
-	searchTimes := 0
+	printTimes := 0
 	printer := func() {
 		if len(str) >= *min {
 			s := string(str)
 			if *search == "" || strings.Contains(s, *search) {
-				if searchTimes > 0 || *search != "" && strings.Contains(s, *search) {
-					searchTimes++
-				}
-
 				if *offset {
-					fmt.Printf("%s:#%d:\t%s\n", file.Name(), pos-int64(len(s)), s)
-				} else {
-					fmt.Println(s)
+					s = fmt.Sprintf("%s:#%d:\t%s", file.Name(), pos-int64(len(s)), s)
 				}
 
-				if *n > 0 && searchTimes >= *n {
+				fmt.Println(s)
+				printTimes++
+
+				if *n > 0 && printTimes >= *n {
 					os.Exit(0)
 				}
 			}
