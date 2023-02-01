@@ -25,12 +25,13 @@ import (
 )
 
 var (
-	min    = flag.Int("min", 6, "minimum length of UTF-8 strings printed, in runes")
-	max    = flag.Int("max", 256, "maximum length of UTF-8 strings printed, in runes")
-	ascii  = flag.Bool("ascii", false, "restrict strings to ASCII")
-	search = flag.String("search", "", "search ASCII string")
-	n      = flag.Int("n", 0, "print at most n places")
-	offset = flag.Bool("offset", true, "show file name and offset of start of each string")
+	min     = flag.Int("min", 6, "minimum length of UTF-8 strings printed, in runes")
+	max     = flag.Int("max", 256, "maximum length of UTF-8 strings printed, in runes")
+	ascii   = flag.Bool("ascii", false, "restrict strings to ASCII")
+	search  = flag.String("search", "", "search ASCII string")
+	n       = flag.Int("n", 0, "print at most n places")
+	offset  = flag.Bool("offset", true, "show file name and offset of start of each string")
+	verbose = flag.Bool("v", false, " display all input data.  Without the -v option, any output lines, which would be identical to the immediately preceding  output line(except for the input offsets), are replaced with a line comprised of a single asterisk.")
 )
 
 var stdout *bufio.Writer
@@ -80,10 +81,19 @@ func do(file *os.File) {
 	str := make([]rune, 0, *max)
 	pos := int64(0)
 	printTimes := 0
+
+	lastPrint := ""
 	printer := func() {
 		if len(str) >= *min {
 			s := string(str)
 			if *search == "" || strings.Contains(s, *search) {
+				if !*verbose {
+					if lastPrint == s {
+						s = "*"
+					} else {
+						lastPrint = s
+					}
+				}
 				if *offset {
 					s = fmt.Sprintf("%s:#%d:\t%s", file.Name(), pos-int64(len(s)), s)
 				}
