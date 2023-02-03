@@ -22,7 +22,7 @@ var (
 	max     = pflag.Int("max", 256, "maximum length of UTF-8 strings printed, in runes")
 	ascii   = pflag.BoolP("ascii", "a", false, "restrict strings to ASCII")
 	tab     = pflag.BoolP("tab", "t", false, "print strings separated by tabs other than new lines")
-	search  = pflag.StringP("search", "s", "", "search ASCII string")
+	search  = pflag.StringP("search", "s", "", "search ASCII sub-string)")
 	files   = pflag.StringArrayP("files", "f", nil, "target file names")
 	n       = pflag.IntP("most", "n", 0, "print at most n places")
 	offset  = pflag.Bool("offset", false, "show file name and offset of start of each string")
