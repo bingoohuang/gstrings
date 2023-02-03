@@ -85,7 +85,6 @@ func do(file *os.File) {
 			return
 		}
 	}
-
 }
 
 type File struct {
@@ -160,5 +159,4 @@ func (f *File) read(in *bufio.Reader) error {
 			f.print()
 		}
 	}
-
 }
