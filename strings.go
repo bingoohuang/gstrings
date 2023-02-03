@@ -3,35 +3,29 @@
 // license that can be found in the LICENSE file.
 
 // Strings is a more capable, UTF-8 aware version of the standard strings utility.
-//
-// Flags(=default) are:
-//
-//	-ascii(=false)    restrict strings to ASCII
-//	-search=abc       search string abc
-//	-min(=6)          minimum length of UTF-8 strings printed, in runes
-//	-max(=256)        maximum length of UTF-8 strings printed, in runes
-//	-offset(=true)    show file name and offset of start of each string
-package main // import "robpike.io/cmd/strings"
+package main
 
 import (
 	"bufio"
-	"flag"
 	"fmt"
 	"io"
 	"log"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/spf13/pflag"
 )
 
 var (
-	min     = flag.Int("min", 6, "minimum length of UTF-8 strings printed, in runes")
-	max     = flag.Int("max", 256, "maximum length of UTF-8 strings printed, in runes")
-	ascii   = flag.Bool("ascii", false, "restrict strings to ASCII")
-	search  = flag.String("search", "", "search ASCII string")
-	n       = flag.Int("n", 0, "print at most n places")
-	offset  = flag.Bool("offset", true, "show file name and offset of start of each string")
-	verbose = flag.Bool("v", false, " display all input data.  Without the -v option, any output lines, which would be identical to the immediately preceding  output line(except for the input offsets), are replaced with a line comprised of a single asterisk.")
+	min     = pflag.Int("min", 6, "minimum length of UTF-8 strings printed, in runes")
+	max     = pflag.Int("max", 256, "maximum length of UTF-8 strings printed, in runes")
+	ascii   = pflag.BoolP("ascii", "a", false, "restrict strings to ASCII")
+	search  = pflag.StringP("search", "s", "", "search ASCII string")
+	files   = pflag.StringArrayP("files", "f", nil, "target file names")
+	n       = pflag.IntP("most", "n", 0, "print at most n places")
+	offset  = pflag.Bool("offset", true, "show file name and offset of start of each string")
+	verbose = pflag.BoolP("verbose", "v", false, "display all input data.  Without the -v option, any output lines, which would be identical to the immediately preceding output line(except for the input offsets), are replaced with a line comprised of a single asterisk.")
 )
 
 var stdout *bufio.Writer
@@ -42,7 +36,7 @@ func main() {
 	stdout = bufio.NewWriter(os.Stdout)
 	defer stdout.Flush()
 
-	flag.Parse()
+	pflag.Parse()
 
 	if *search != "" {
 		*min = len(*search)
@@ -52,13 +46,14 @@ func main() {
 		*max = *min
 	}
 
-	if flag.NArg() == 0 {
+	*files = append(*files, pflag.Args()...)
+	if len(*files) == 0 {
 		do(os.Stdin)
 		return
 	}
 
-	for _, arg := range flag.Args() {
-		dealFile(arg)
+	for _, f := range *files {
+		dealFile(f)
 	}
 }
 
