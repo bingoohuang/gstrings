@@ -98,7 +98,7 @@ func (f *Scanner) print() {
 		}
 		f.printTimes++
 
-		if f.Max > 0 && f.printTimes >= f.Max {
+		if f.Most > 0 && f.printTimes >= f.Max {
 			fmt.Println()
 			os.Exit(0)
 		}
