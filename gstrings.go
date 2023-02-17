@@ -6,8 +6,8 @@
 package gstrings
 
 import (
-	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -42,7 +42,7 @@ func (c *ScanConfig) NewScanner(file string) *Scanner {
 	}
 }
 
-func (f *Scanner) Scan(in *bufio.Reader) error {
+func (f *Scanner) Scan(in io.RuneReader) error {
 	var r rune
 	var wid int
 	var err error
