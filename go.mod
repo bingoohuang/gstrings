@@ -1,4 +1,4 @@
-module robpike.io/cmd/strings
+module github.com/bingoohuang/gstrings
 
 go 1.19
 
