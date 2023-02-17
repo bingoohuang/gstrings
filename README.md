@@ -1,16 +1,16 @@
-# strings
+# gstrings
 
-strings is a more capable, UTF-8 aware version of the standard strings utility.
+gstrings is a more capable, UTF-8 aware version of the standard strings utility.
 For full documentation, fork from [robpike/strings](https://github.com/robpike/strings).
 
 ```sh
-$ strings -search ehprquli@iturq.info data/bingoo/t4.ibd
+$ gstrings -search ehprquli@iturq.info data/bingoo/t4.ibd
 data/bingoo/t4.ibd:#105983:	皇甫艩嵯山东省潍坊市吢耽路7494号潯條小区15单元2282室ehprquli@iturq.info178195239864851373519850729873X
 data/bingoo/t4.ibd:#106135:	郎熚黑海南省海口市肂憭路7342号磔奐小区17单元1329室ehprquli@iturq.info1769077249868331188197701111190
 ```
 
 ```shell
-$ strings t3.ibd | tail
+$ gstrings t3.ibd | tail
 t3.ibd:#325119:	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 t3.ibd:#325375:	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 t3.ibd:#325631:	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -22,7 +22,7 @@ t3.ibd:#326911:	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 t3.ibd:#327167:	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 t3.ibd:#327423:	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
-$ strings t4.ibd | tail
+$ gstrings t4.ibd | tail
 t4.ibd:#105101:	莘盗牁甘肃省定西市撅齗路6272号箲蛀小区4单元1207室aacrqnhl@ygjtl.me180880142164351575820160114069X
 t4.ibd:#105247:	成垄纆云南省丽江市皘疬路416号苁节小区1单元1376室mjilglyl@ibhad.vip1533230689186340644198005194531
 t4.ibd:#105393:	扶鮯銦陕西省咸阳市滍稈路6543号絗欀小区8单元1925室hdxwftmr@exzal.com1572786679698444319198206210387

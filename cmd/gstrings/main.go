@@ -3,15 +3,18 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/bingoohuang/gstrings"
-	"github.com/spf13/pflag"
 	"io"
 	"log"
 	"os"
+
+	"github.com/bingoohuang/gstrings"
+	"github.com/spf13/pflag"
 )
 
-var conf gstrings.ScanConfig
-var files []string
+var (
+	conf  gstrings.ScanConfig
+	files []string
+)
 
 func init() {
 	pflag.IntVar(&conf.Min, "min", 6, "minimum length of UTF-8 strings printed, in runes")
