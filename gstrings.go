@@ -11,6 +11,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/samber/lo"
 )
 
 type ScanConfig struct {
@@ -27,7 +29,7 @@ type ScanConfig struct {
 type Scanner struct {
 	file string
 
-	str        []rune
+	printable  []rune
 	pos        int64
 	printTimes int
 	lastPrint  string
@@ -37,7 +39,7 @@ type Scanner struct {
 func (c *ScanConfig) NewScanner(file string) *Scanner {
 	return &Scanner{
 		file:       file,
-		str:        make([]rune, 0, c.Max),
+		printable:  make([]rune, 0, c.Max),
 		ScanConfig: c,
 	}
 }
@@ -47,12 +49,8 @@ func (f *Scanner) Scan(in io.RuneReader) error {
 	var wid int
 	var err error
 
-	if f.Min <= 0 {
-		f.Min = 6
-	}
-	if f.Max <= 0 {
-		f.Max = 256
-	}
+	f.Min = lo.Ternary(f.Min <= 0, 6, f.Min)
+	f.Max = lo.Ternary(f.Max <= 0, 256, f.Max)
 
 	// One string per loop.
 	for ; ; f.pos += int64(wid) {
@@ -64,20 +62,20 @@ func (f *Scanner) Scan(in io.RuneReader) error {
 			continue
 		}
 		// It's printable. Keep it.
-		f.str = append(f.str, r)
-		if len(f.str) >= cap(f.str) {
+		f.printable = append(f.printable, r)
+		if len(f.printable) >= cap(f.printable) {
 			f.print()
 		}
 	}
 }
 
 func (f *Scanner) print() {
-	if len(f.str) < f.Min {
-		f.str = f.str[:0]
+	if len(f.printable) < f.Min {
+		f.printable = f.printable[:0]
 		return
 	}
 
-	s := string(f.str)
+	s := string(f.printable)
 	if f.Search == "" || strings.Contains(s, f.Search) {
 		if !f.Verbose {
 			if f.lastPrint == s {
@@ -104,5 +102,5 @@ func (f *Scanner) print() {
 		}
 	}
 
-	f.str = f.str[:0]
+	f.printable = f.printable[:0]
 }
