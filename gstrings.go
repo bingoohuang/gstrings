@@ -16,24 +16,25 @@ import (
 )
 
 type ScanConfig struct {
+	Search  string
 	Min     int
 	Max     int
+	Most    int
 	Ascii   bool
 	Tab     bool
-	Search  string
-	Most    int
 	Offset  bool
 	Verbose bool
 }
 
 type Scanner struct {
+	*ScanConfig
 	file string
+
+	lastPrint string
 
 	printable  []rune
 	pos        int64
 	printTimes int
-	lastPrint  string
-	*ScanConfig
 }
 
 func (c *ScanConfig) NewScanner(file string) *Scanner {

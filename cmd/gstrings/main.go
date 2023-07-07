@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -76,7 +77,7 @@ func do(file *os.File) {
 
 	for in := bufio.NewReader(file); ; {
 		if err := f.Scan(in); err != nil {
-			if err != io.EOF {
+			if !errors.Is(err, io.EOF) {
 				log.Print(err)
 			}
 
