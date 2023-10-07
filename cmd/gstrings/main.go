@@ -2,6 +2,8 @@ package main
 
 import (
 	"bufio"
+	"bytes"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"io"
@@ -23,6 +25,7 @@ func init() {
 	pflag.BoolVarP(&conf.Ascii, "ascii", "a", false, "restrict strings to ASCII")
 	pflag.BoolVarP(&conf.Tab, "tab", "t", false, "print strings separated by tabs other than new lines")
 	pflag.StringVarP(&conf.Search, "search", "s", "", "search ASCII sub-string)")
+	pflag.StringVarP(&conf.Hex, "hex", "", "", "search HEX raw bytes)")
 	pflag.StringArrayVarP(&files, "files", "f", nil, "target file names")
 	pflag.IntVarP(&conf.Most, "most", "n", 0, "print at most n places")
 	pflag.BoolVar(&conf.Offset, "offset", false, "show file name and offset of start of each string")
@@ -74,6 +77,10 @@ func dealFile(file string) {
 
 func do(file *os.File) {
 	f := conf.NewScanner(file.Name())
+	if conf.Hex != "" {
+		hexSearch(file)
+		return
+	}
 
 	for in := bufio.NewReader(file); ; {
 		if err := f.Scan(in); err != nil {
@@ -84,4 +91,41 @@ func do(file *os.File) {
 			return
 		}
 	}
+}
+
+func hexSearch(file *os.File) {
+	target, err := hex.DecodeString(conf.Hex)
+	if err != nil {
+		log.Fatalf("invalid hex")
+	}
+
+	targetSize := len(target)
+	buf := make([]byte, targetSize*2)
+	keep := 0
+	offset := 0
+
+	for in := bufio.NewReader(file); ; {
+		n, err := in.Read(buf[keep:])
+		if errors.Is(err, io.EOF) {
+			break
+		}
+		idx := bytes.Index(buf[:keep+n], target)
+		if idx >= 0 {
+			if conf.Offset {
+				log.Printf("Found at %d, Offset %d: %x", offset+idx, offset, buf[:keep+n])
+			} else {
+				log.Printf("Found")
+			}
+
+			return
+		}
+		if keep+n >= targetSize {
+			keep += n - targetSize
+			copy(buf, buf[targetSize:])
+		}
+
+		offset += n
+	}
+
+	log.Print("Not Found")
 }

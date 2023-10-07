@@ -16,6 +16,7 @@ import (
 )
 
 type ScanConfig struct {
+	Hex     string
 	Search  string
 	Min     int
 	Max     int

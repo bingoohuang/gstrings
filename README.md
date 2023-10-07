@@ -34,3 +34,10 @@ t4.ibd:#106135:	郎熚黑海南省海口市肂憭路7342号磔奐小区17单元1
 t4.ibd:#106284:	通蒫冒广东省汕尾市啞鵟路3432号櫳峣小区10单元557室ehprquli@iturq.info1808537856755372400199001052477
 t4.ibd:#106432:	印迎値云南省昭通市蠬咏路2554号廥溪小区18单元1055室ehprquli@iturq.info1503766057953544390200511305364
 ```
+
+## find by hex raw bytes
+
+```shell
+$ gstrings --offset --hex 2f6c69 ~/RustroverProjects/hash_macro/target/release/hash_macro                                                          
+strings: Found at 1667, Offset 1665: 73722f6c6962
+```
